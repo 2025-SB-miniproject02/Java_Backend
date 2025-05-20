@@ -25,7 +25,7 @@ public class MemberOrder {
     private int order_id;
     
     private String order_user;
-    private int order_prod;
+    private int order_sale;
     private LocalDate order_date;
     private String order_payment;
     private LocalDate order_completed;
@@ -39,6 +39,6 @@ public class MemberOrder {
     private Member member;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="order_prod", referencedColumnName="book_id", updatable=false, insertable=false)
-    private Book book;
+    @JoinColumn(name="order_sale", referencedColumnName="sale_id", updatable=false, insertable=false)
+    private Sale sale;
 }

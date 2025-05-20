@@ -3,7 +3,7 @@ package com.xbooks.project.service;
 import org.springframework.stereotype.Service;
 
 import com.xbooks.project.dto.MemberAuthDTO;
-import com.xbooks.project.dto.MemberSignUpDTO;
+import com.xbooks.project.dto.MemberDTO;
 import com.xbooks.project.exception.ResourceNotFoundException;
 import com.xbooks.project.model.Member;
 import com.xbooks.project.repository.MemberRepository;
@@ -31,8 +31,8 @@ public class MemberService {
         return member;
     }
 
-    public MemberSignUpDTO convertToSignUpDTO(Member member){
-        return MemberSignUpDTO.builder()
+    public MemberDTO convertToMemberDTO(Member member){
+        return MemberDTO.builder()
                 .mem_id(member.getMem_id())
                 .mem_email(member.getMem_email())
                 .mem_password(member.getMem_password())
@@ -42,19 +42,19 @@ public class MemberService {
                 .build();
     }
 
-    public Member convertToEntity(MemberSignUpDTO memberSignUpDTO){
+    public Member convertToEntity(MemberDTO memberDTO){
         Member member = new Member();
-        member.setMem_id(memberSignUpDTO.getMem_id());
-        member.setMem_email(memberSignUpDTO.getMem_email());
-        member.setMem_password(memberSignUpDTO.getMem_password());
-        member.setMem_name(memberSignUpDTO.getMem_name());
-        member.setMem_nickname(memberSignUpDTO.getMem_nickname());
-        member.setMem_deleted(memberSignUpDTO.getMem_deleted());
+        member.setMem_id(memberDTO.getMem_id());
+        member.setMem_email(memberDTO.getMem_email());
+        member.setMem_password(memberDTO.getMem_password());
+        member.setMem_name(memberDTO.getMem_name());
+        member.setMem_nickname(memberDTO.getMem_nickname());
+        member.setMem_deleted(memberDTO.getMem_deleted());
         return member;
     }
 
-    public MemberSignUpDTO signUp(MemberSignUpDTO mem_signUp){
-        return convertToSignUpDTO(this.memberRepository.save(convertToEntity(mem_signUp)));
+    public MemberDTO signUp(MemberDTO memberDTO){
+        return convertToMemberDTO(this.memberRepository.save(convertToEntity(memberDTO)));
     }
 
     public MemberAuthDTO logIn(MemberAuthDTO mem_auth){
@@ -67,6 +67,16 @@ public class MemberService {
 
         return convertToAuthDTO(member);
     };
+
+    public MemberDTO setMemberUpdate(MemberDTO memberDTO){
+        Member member = this.memberRepository.findById(memberDTO.getMem_id())
+                                             .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 아이디입니다."));
+        
+        member.setMem_password(memberDTO.getMem_password());
+        member.setMem_nickname(memberDTO.getMem_nickname());
+                                             
+        return convertToMemberDTO(this.memberRepository.save(member));                                     
+    }
 
     public void setMemberDelete(String mem_id){
         Member member = this.memberRepository.findById(mem_id)

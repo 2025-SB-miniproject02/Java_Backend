@@ -21,16 +21,14 @@ public class Member {
     private String mem_id;
 
     private String mem_email;
+    private String mem_addr;
     private String mem_password;
     private String mem_name;
     private String mem_nickname;
     private String mem_deleted;
 
     @OneToMany(mappedBy="member")
-    private List<Book> books = new ArrayList<>();
-
-    @OneToMany(mappedBy="member")
-    private List<Cart> carts = new ArrayList<>();
+    private List<Sale> sales = new ArrayList<>();
 
     @OneToMany(mappedBy="member")
     private List<MemberOrder> memberOrders = new ArrayList<>();
