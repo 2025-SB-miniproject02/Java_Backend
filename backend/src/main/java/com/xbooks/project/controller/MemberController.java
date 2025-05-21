@@ -1,8 +1,7 @@
 package com.xbooks.project.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,17 +32,26 @@ public class MemberController {
         return ResponseEntity.ok(this.memberService.logIn(mem_auth));
     }
 
-    // 회원정보 수정
-    @PutMapping(path="/update")
+    // 마이 페이지
+    @GetMapping(path="/my_pages")
+    public ResponseEntity<MemberDTO> getMemberView(@RequestBody MemberDTO memberDTO){
+        return ResponseEntity.ok(this.memberService.getMemberView(memberDTO));
+    }
+
+    // 회원 비밀번호 수정
+    @PutMapping(path="/update1")
+    public ResponseEntity<MemberDTO> setMemberPassUpdate(@RequestBody MemberDTO memberDTO){
+        return ResponseEntity.ok(this.memberService.setMemberPassUpdate(memberDTO));
+    }
+
+    @PutMapping(path="/update2")
     public ResponseEntity<MemberDTO> setMemberUpdate(@RequestBody MemberDTO memberDTO){
         return ResponseEntity.ok(this.memberService.setMemberUpdate(memberDTO));
     }
 
-    // 회원 삭제
-    @DeleteMapping(path="/delete/{mem_id}")
-    public ResponseEntity<Void> setMemberDelete(@PathVariable("mem_id") String mem_id){
-        this.memberService.setMemberDelete(mem_id);
-
-        return ResponseEntity.noContent().build();
+    // 회원 탈퇴
+    @PutMapping(path="/delete/{mem_id}")
+    public ResponseEntity<MemberDTO> setMemberDelete(@RequestBody MemberDTO memberDTO){
+        return ResponseEntity.ok(this.memberService.setMemberDelete(memberDTO));
     }
 }

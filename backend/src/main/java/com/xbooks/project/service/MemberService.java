@@ -19,14 +19,14 @@ public class MemberService {
 
     public MemberAuthDTO convertToAuthDTO(Member member){
         return MemberAuthDTO.builder()
-                .mem_id(member.getMem_id())
+                .memEmail(member.getMemEmail())
                 .mem_password(member.getMem_password())
                 .build();
     }
 
     public Member convertToEntity(MemberAuthDTO memberAuthDTO){
         Member member = new Member();
-        member.setMem_id(memberAuthDTO.getMem_id());
+        member.setMemEmail(memberAuthDTO.getMemEmail());
         member.setMem_password(memberAuthDTO.getMem_password());
         return member;
     }
@@ -34,7 +34,7 @@ public class MemberService {
     public MemberDTO convertToMemberDTO(Member member){
         return MemberDTO.builder()
                 .mem_id(member.getMem_id())
-                .mem_email(member.getMem_email())
+                .memEmail(member.getMemEmail())
                 .mem_password(member.getMem_password())
                 .mem_name(member.getMem_name())
                 .mem_nickname(member.getMem_nickname())
@@ -45,7 +45,7 @@ public class MemberService {
     public Member convertToEntity(MemberDTO memberDTO){
         Member member = new Member();
         member.setMem_id(memberDTO.getMem_id());
-        member.setMem_email(memberDTO.getMem_email());
+        member.setMemEmail(memberDTO.getMemEmail());
         member.setMem_password(memberDTO.getMem_password());
         member.setMem_name(memberDTO.getMem_name());
         member.setMem_nickname(memberDTO.getMem_nickname());
@@ -54,12 +54,13 @@ public class MemberService {
     }
 
     public MemberDTO signUp(MemberDTO memberDTO){
+        memberDTO.setMem_deleted("N");
         return convertToMemberDTO(this.memberRepository.save(convertToEntity(memberDTO)));
     }
 
     public MemberAuthDTO logIn(MemberAuthDTO mem_auth){
-        Member member = this.memberRepository.findById(mem_auth.getMem_id())
-                                             .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 아이디입니다."));
+        Member member = this.memberRepository.findByMemEmail(mem_auth.getMemEmail())
+                                             .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 이메일입니다."));
 
         if (!mem_auth.getMem_password().equals(member.getMem_password())){
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다!");
@@ -68,19 +69,39 @@ public class MemberService {
         return convertToAuthDTO(member);
     };
 
-    public MemberDTO setMemberUpdate(MemberDTO memberDTO){
-        Member member = this.memberRepository.findById(memberDTO.getMem_id())
-                                             .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 아이디입니다."));
+    public MemberDTO getMemberView(MemberDTO memberDTO){
+        Member member = this.memberRepository.findByMemEmail(memberDTO.getMemEmail())
+                                             .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 이메일입니다."));
+        
+        return convertToMemberDTO(member);                                     
+    }
+
+    public MemberDTO setMemberPassUpdate(MemberDTO memberDTO){
+        Member member = this.memberRepository.findByMemEmail(memberDTO.getMemEmail())
+                                             .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 이메일입니다."));
         
         member.setMem_password(memberDTO.getMem_password());
-        member.setMem_nickname(memberDTO.getMem_nickname());
                                              
         return convertToMemberDTO(this.memberRepository.save(member));                                     
     }
 
-    public void setMemberDelete(String mem_id){
-        Member member = this.memberRepository.findById(mem_id)
-                                             .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 아이디입니다."));
-        this.memberRepository.delete(member);
+    public MemberDTO setMemberUpdate(MemberDTO memberDTO){
+        Member member = this.memberRepository.findByMemEmail(memberDTO.getMemEmail())
+                                             .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 이메일입니다."));
+
+        member.setMem_nickname(memberDTO.getMem_nickname());
+        member.setMem_name(memberDTO.getMem_name());
+        member.setMem_hp(memberDTO.getMem_hp());
+        member.setMem_addr(memberDTO.getMem_addr());
+        
+        return convertToMemberDTO(this.memberRepository.save(member));
+    }
+
+    public MemberDTO setMemberDelete(MemberDTO memberDTO){
+        Member member = this.memberRepository.findByMemEmail(memberDTO.getMemEmail())
+                                             .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 이메일입니다."));
+        
+        member.setMem_deleted("Y");
+        return convertToMemberDTO(this.memberRepository.save(member));
     }
 }

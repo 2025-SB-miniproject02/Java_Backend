@@ -3,7 +3,10 @@ package com.xbooks.project.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -18,10 +21,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Member {
     @Id
-    private String mem_id;
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private long   mem_id;
 
-    private String mem_email;
+    @Column(name="mem_email", unique=true)
+    private String memEmail;
     private String mem_addr;
+    private String mem_hp;
     private String mem_password;
     private String mem_name;
     private String mem_nickname;

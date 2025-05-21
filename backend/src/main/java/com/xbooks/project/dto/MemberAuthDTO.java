@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberAuthDTO {
-    private String mem_id;
+    private String memEmail;
     private String mem_password;
 }
