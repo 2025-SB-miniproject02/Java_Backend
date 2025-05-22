@@ -36,6 +36,8 @@ public class MemberService {
                 .mem_id(member.getMem_id())
                 .memEmail(member.getMemEmail())
                 .mem_password(member.getMem_password())
+                .mem_addr(member.getMem_addr())
+                .mem_hp(member.getMem_hp())
                 .mem_name(member.getMem_name())
                 .mem_nickname(member.getMem_nickname())
                 .mem_deleted(member.getMem_deleted())
@@ -47,6 +49,8 @@ public class MemberService {
         member.setMem_id(memberDTO.getMem_id());
         member.setMemEmail(memberDTO.getMemEmail());
         member.setMem_password(memberDTO.getMem_password());
+        member.setMem_addr(memberDTO.getMem_addr());
+        member.setMem_hp(memberDTO.getMem_hp());
         member.setMem_name(memberDTO.getMem_name());
         member.setMem_nickname(memberDTO.getMem_nickname());
         member.setMem_deleted(memberDTO.getMem_deleted());

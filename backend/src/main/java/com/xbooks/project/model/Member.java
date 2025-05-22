@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,7 +22,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Member {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="member_seq_gen")
+    @SequenceGenerator(name="member_seq_gen", sequenceName="Member_seq",
+                       initialValue=101, allocationSize=1)
     private long   mem_id;
 
     @Column(name="mem_email", unique=true)

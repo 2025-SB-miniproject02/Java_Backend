@@ -3,6 +3,7 @@ package com.xbooks.project.service;
 import org.springframework.stereotype.Service;
 
 import com.xbooks.project.dto.BookDTO;
+import com.xbooks.project.exception.ResourceNotFoundException;
 import com.xbooks.project.repository.BookRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,9 @@ public class BookService {
 
     public BookDTO findBookData(int book_id){
         BookDTO book = this.bookRepository.findBookData(book_id);
+        if (book == null){
+            throw new ResourceNotFoundException("검색하신 책에 대한 정보가 없습니다!");
+        }
         return book;
     }
 }
