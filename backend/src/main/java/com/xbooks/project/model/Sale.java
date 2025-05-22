@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -25,14 +28,19 @@ public class Sale {
     private int sale_id;
     
     private int sale_book_id;
-    private String sale_mem_id;
+    private int sale_mem_id;
     private String sale_image;
     private String sale_condition;
     private String sale_description;
     private int sale_price;
     private String sale_status;
+
+    @CreationTimestamp
     private LocalDate sale_created;
+
+    @UpdateTimestamp
     private LocalDate sale_updated;
+
     private LocalDate sale_solded;
     private int sale_predicted;
 
