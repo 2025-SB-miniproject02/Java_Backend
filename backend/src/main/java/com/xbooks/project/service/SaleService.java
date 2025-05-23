@@ -46,6 +46,7 @@ public class SaleService {
 
     public SaleDTO setSaleInsert(SaleDTO saleDTO){
         saleDTO.setSale_status("판매중");
+        saleDTO.setSale_image("sale_image");
         return ConvertToDTO(this.saleRepository.save(convertToEntity(saleDTO)));
     }
 }

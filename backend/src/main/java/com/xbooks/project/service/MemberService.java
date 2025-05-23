@@ -3,6 +3,7 @@ package com.xbooks.project.service;
 import org.springframework.stereotype.Service;
 
 import com.xbooks.project.dto.MemberAuthDTO;
+import com.xbooks.project.dto.MemberChangePasswordDTO;
 import com.xbooks.project.dto.MemberDTO;
 import com.xbooks.project.exception.ResourceNotFoundException;
 import com.xbooks.project.model.Member;
@@ -58,7 +59,6 @@ public class MemberService {
     }
 
     public MemberDTO signUp(MemberDTO memberDTO){
-        memberDTO.setMem_deleted("N");
         return convertToMemberDTO(this.memberRepository.save(convertToEntity(memberDTO)));
     }
 
@@ -70,23 +70,52 @@ public class MemberService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다!");
         }
 
+        if ("Y".equals(member.getMem_deleted())) {
+            throw new IllegalStateException("ACCOUNT_DELETED: 이미 탈퇴 처리된 계정입니다. 계정을 복구하시겠습니까?");
+        }
+
         return convertToAuthDTO(member);
     };
 
-    public MemberDTO getMemberView(MemberDTO memberDTO){
-        Member member = this.memberRepository.findByMemEmail(memberDTO.getMemEmail())
+    public MemberDTO recoverAccount(String memEmail) {
+        Member member = memberRepository.findByMemEmail(memEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("해당 이메일의 회원을 찾을 수 없습니다."));
+
+        if ("N".equals(member.getMem_deleted())) {
+            throw new IllegalArgumentException("이 계정은 탈퇴 상태가 아닙니다.");
+        }
+
+        member.setMem_deleted("N"); // 'N'으로 변경하여 복구
+        return convertToMemberDTO(memberRepository.save(member));
+    }
+
+    public MemberDTO getMemberView(String memEmail){
+        Member member = this.memberRepository.findByMemEmail(memEmail)
                                              .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 이메일입니다."));
         
         return convertToMemberDTO(member);                                     
     }
 
-    public MemberDTO setMemberPassUpdate(MemberDTO memberDTO){
-        Member member = this.memberRepository.findByMemEmail(memberDTO.getMemEmail())
-                                             .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 이메일입니다."));
+    public MemberDTO changeMemberPassword(MemberChangePasswordDTO changePasswordDTO) { // ⭐️ 메서드명 변경 (혼동 방지)
+        // 1. 이메일로 회원 조회
+        Member member = memberRepository.findByMemEmail(changePasswordDTO.getMemEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("해당 이메일의 회원을 찾을 수 없습니다."));
+
+        // 2. 현재 비밀번호 일치 여부 확인 (⭐️ 중요: 암호화 없이 직접 비교)
+        if (!changePasswordDTO.getCurrentPassword().equals(member.getMem_password())) {
+            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+        }
+
+        // 3. 새로운 비밀번호를 현재 비밀번호와 다르게 설정했는지 확인
+        if (changePasswordDTO.getNewPassword().equals(member.getMem_password())) {
+            throw new IllegalArgumentException("새로운 비밀번호는 현재 비밀번호와 같을 수 없습니다.");
+        }
+
+        // 4. 새로운 비밀번호로 업데이트 (⭐️ 암호화 없이 평문 그대로 저장)
+        member.setMem_password(changePasswordDTO.getNewPassword());
         
-        member.setMem_password(memberDTO.getMem_password());
-                                             
-        return convertToMemberDTO(this.memberRepository.save(member));                                     
+        // 변경사항 저장 및 DTO 변환하여 반환
+        return convertToMemberDTO(this.memberRepository.save(member));
     }
 
     public MemberDTO setMemberUpdate(MemberDTO memberDTO){

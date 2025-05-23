@@ -17,14 +17,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BookController {
     private final BookService bookService;
-
-    // @GetMapping(path="/list")
-    // public ResponseEntity<List<BookDTO>> getBookList() {
-    //     return ResponseEntity.ok(this.bookService.getBookList());
-    // }
     
     @GetMapping(path="/seller")
-    public ResponseEntity<BookDTO> findBookData(@RequestParam int book_id){
+    public ResponseEntity<BookDTO> findBookData(@RequestParam Long book_id){
         BookDTO data = this.bookService.findBookData(book_id);
         return ResponseEntity.ok(data);
     }

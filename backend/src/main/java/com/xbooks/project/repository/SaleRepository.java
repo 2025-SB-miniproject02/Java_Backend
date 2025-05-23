@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.xbooks.project.model.Sale;
 
 @Repository
-public interface SaleRepository extends JpaRepository<Sale, Integer>{
+public interface SaleRepository extends JpaRepository<Sale, Long>{
     
 }

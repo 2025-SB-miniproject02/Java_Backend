@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
+
+@import "tailwindcss";
+
+* {
+  font-family: "Gowun Dodum", sans-serif;
+}
+
+@theme {
+  --color-primary : #ffad61;
+  --color-primary-dull : #f9973a;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

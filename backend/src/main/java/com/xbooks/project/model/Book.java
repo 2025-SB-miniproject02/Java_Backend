@@ -4,9 +4,12 @@ import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,7 +22,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Book {
     @Id
-    private int book_id;
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="book_seq_gen")
+    @SequenceGenerator(name="book_seq_gen", sequenceName="Book_seq",
+                       allocationSize=1)
+    private Long book_id;
     
     private int book_category_id;
     private String book_title;

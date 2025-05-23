@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BookService {
     private final BookRepository bookRepository;
 
-    public BookDTO findBookData(int book_id){
+    public BookDTO findBookData(Long book_id){
         BookDTO book = this.bookRepository.findBookData(book_id);
         if (book == null){
             throw new ResourceNotFoundException("검색하신 책에 대한 정보가 없습니다!");

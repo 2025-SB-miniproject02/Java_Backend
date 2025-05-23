@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class SaleDTO {
-    private int sale_id;
-    private int sale_book_id;
-    private int sale_mem_id;
+    private Long sale_id;
+    private Long sale_book_id;
+    private Long sale_mem_id;
     private String sale_image;
     private String sale_condition;
     private String sale_description;
